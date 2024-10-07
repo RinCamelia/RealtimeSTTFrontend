@@ -16,16 +16,26 @@ if __name__ == '__main__':
         model="small.en",
         language="en"
         )
-    review_lines = []
+    
+    lines_storage = []
+
+    def process_text(text):
+        print("Transcribed line: " + text)
+        lines_storage.append(text + "\n")
+
+    def dump_lines():
+        if len(lines) > 0:
+            print("writing lines...")
+            for line in lines_storage:
+                keyboard.write(line)
+            lines_storage.clear()
+
+
     print("start commenting...")
+    keyboard.add_hotkey(";", dump_lines)
     
     try:
         while (True):
-            speech_line = recorder.text()
-            print("Transcribed line: " + speech_line)
-            review_lines.append(speech_line + "\n")
+            recorder.text(process_text)
     except KeyboardInterrupt:
-        print("writing lines...")
-        for line in review_lines:
-            keyboard.write(line)
         print("Exiting application due to keyboard interrupt")
