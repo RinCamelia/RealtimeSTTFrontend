@@ -24,7 +24,7 @@ if __name__ == '__main__':
         lines_storage.append(text + "\n")
 
     def dump_lines():
-        if len(lines) > 0:
+        if len(lines_storage) > 0:
             print("writing lines...")
             for line in lines_storage:
                 keyboard.write(line)
