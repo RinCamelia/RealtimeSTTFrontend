@@ -12,7 +12,7 @@ Simple frontend that uses `RealtimeSTT` and `keyboard` to do local speech to tex
 
 > python main.py
 
-On a command line. Speak into your mic as you need it. it will be transcribed to the command line, then dumped out through keyboard inputs when you interrupt the program.
+On a command line. Speak into your mic as you need it. it will be transcribed to the command line so you can see the lines as they come in, and pressing ; will dump everything in its buffer via keyboard events into whatever is open and clear its current buffer. 
 
 # Notes
 
