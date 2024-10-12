@@ -21,4 +21,4 @@ The script dumps a config YAML file if it doesn't exist on first run - then you 
 
 Does not use CUDA - I don't have an NVidia GPU to install or test this, and I haven't yet figured out any of the AMD compatible translation layers.
 Uses the `small` model - this is reasonably performant on my machine, but you may want to edit to `base` or `tiny` if your CPU isn't very powerful. 
-Credit to the simple test script provided by `RealtimeSTT` - the script is currently a modified version of that while I figure out how the final form should behave
+Many thanks to the testing scripts provided by RealtimeSTT!
