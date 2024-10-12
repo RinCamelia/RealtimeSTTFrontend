@@ -31,13 +31,14 @@ yaml.register_class(DumpMethod)
 
 def load_config(config_file_name):
     config = {
-        'version': 4,
+        'version': 5,
         'stt_settings': {
             'model': 'small.en',
             'language': 'en',
             'prompt': None,
             'enable_spinner': False,
             'speech_model_sensitivity': 0.05,
+            'output_transcription_time': False
         },
         'hotkeys': {
             'text_output': ';'
@@ -95,6 +96,7 @@ if __name__ == '__main__':
         silero_sensitivity=config['stt_settings']['speech_model_sensitivity'],
         model=config['stt_settings']['model'],
         language=config['stt_settings']['language'],
+        print_transcription_time=config['stt_settings']['output_transcription_time'],
         initial_prompt=config['stt_settings']['prompt']
         )
 
