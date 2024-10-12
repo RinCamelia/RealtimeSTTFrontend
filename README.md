@@ -14,6 +14,8 @@ Simple frontend that uses `RealtimeSTT` and `keyboard` to do local speech to tex
 
 On a command line. Speak into your mic as you need it. it will be transcribed to the command line so you can see the lines as they come in, and pressing ; will dump everything in its buffer via keyboard events into whatever is open and clear its current buffer. 
 
+If you want to prompt the model to hopefully do a better job at your transcription usage, create a file named prompt.txt and put one in for the model to use.
+
 # Notes
 
 Does not use CUDA - I don't have an NVidia GPU to install or test this, and I haven't yet figured out any of the AMD compatible translation layers.

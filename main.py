@@ -8,15 +8,21 @@ if __name__ == '__main__':
         from torchaudio._extension.utils import _init_dll_path
         _init_dll_path()
 
-    from RealtimeSTT import AudioToTextRecorder
+    from RealtimeSTT import AudioToTextRecorder 
+    
+    prompt = ""
+    if os.path.isfile("prompt.txt"):
+        with open("prompt.txt") as prompt_file:
+            prompt = prompt_file.read()
 
     recorder = AudioToTextRecorder(
         spinner=False,
         silero_sensitivity=0.05,
         model="small.en",
-        language="en"
+        language="en",
+        initial_prompt=prompt
         )
-    
+
     lines_storage = []
 
     def process_text(text):
@@ -28,6 +34,7 @@ if __name__ == '__main__':
             print("writing lines...")
             for line in lines_storage:
                 keyboard.write(line)
+                time.sleep(0.1)
             lines_storage.clear()
 
 
