@@ -3,24 +3,37 @@ if __name__ == '__main__':
     import os
     import sys
     import keyboard
+    import yaml
+    from RealtimeSTT import AudioToTextRecorder 
 
     if os.name == "nt" and (3, 8) <= sys.version_info < (3, 99):
         from torchaudio._extension.utils import _init_dll_path
         _init_dll_path()
 
-    from RealtimeSTT import AudioToTextRecorder 
-    
-    prompt = ""
-    if os.path.isfile("prompt.txt"):
-        with open("prompt.txt") as prompt_file:
-            prompt = prompt_file.read()
+    config_file_name = 'config.yml'
+    config = {
+        'model': 'small.en',
+        'language': 'en',
+        'prompt': '',
+        'enable_spinner': False,
+        'speech_model_sensitivity': 0.05,
+        'dump_hotkey': ';',
+        'dump_time_between_lines': 0.1
+    }
+
+    if (os.path.isfile(config_file_name)):
+        with open(config_file_name) as config_file:
+            config = yaml.safe_load(config_file)
+    else:
+        with open(config_file_name, 'w') as config_file:
+            yaml.safe_dump(config, config_file)
 
     recorder = AudioToTextRecorder(
-        spinner=False,
-        silero_sensitivity=0.05,
-        model="small.en",
-        language="en",
-        initial_prompt=prompt
+        spinner=config['enable_spinner'],
+        silero_sensitivity=config['speech_model_sensitivity'],
+        model=config['model'],
+        language=config['language'],
+        initial_prompt=config['prompt']
         )
 
     lines_storage = []
@@ -34,12 +47,12 @@ if __name__ == '__main__':
             print("writing lines...")
             for line in lines_storage:
                 keyboard.write(line)
-                time.sleep(0.1)
+                time.sleep(config['dump_time_between_lines'])
             lines_storage.clear()
 
 
     print("start commenting...")
-    keyboard.add_hotkey(";", dump_lines)
+    keyboard.add_hotkey(config['dump_hotkey'], dump_lines)
     
     try:
         while (True):
