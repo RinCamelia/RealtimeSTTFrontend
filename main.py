@@ -3,7 +3,6 @@ import sys
 import keyboard
 import time
 import ruamel.yaml
-from ruamel.yaml import yaml_object
 from enum import Enum, auto
 
 
@@ -16,18 +15,17 @@ config_file_name = 'config.yml'
 lines_storage = []
 
 class DumpMethod(Enum):
-    yaml_tag = "DumpMethod"
 
     KEYBOARD = auto()
     TEXT_FILE = auto()
 
     @classmethod
     def to_yaml(cls, representer, node):
-        return representer.represent_str(node.name)
+        return representer.represent_scalar(u'!DumpMethod',  node.name)
     
     @classmethod
     def from_yaml(cls, constructor, node):
-        return cls[node]
+        return cls[node.value]
 
 yaml.register_class(DumpMethod)
 
@@ -70,7 +68,7 @@ def process_text(text):
     print('Transcribed line: ' + text)
     lines_storage.append(text + '\n')
 
-def dump_lines(method):
+def dump_lines():
     if len(lines_storage) > 0:
         print('writing lines via chosen dump method')
         match config['text_output']['method']:
