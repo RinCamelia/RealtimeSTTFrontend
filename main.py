@@ -23,6 +23,7 @@ if __name__ == '__main__':
     import sys
     import keyboard
     import yaml
+    import time
     from RealtimeSTT import AudioToTextRecorder 
 
     if os.name == 'nt' and (3, 8) <= sys.version_info < (3, 99):
