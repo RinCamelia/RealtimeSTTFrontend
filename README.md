@@ -6,7 +6,7 @@ Simple frontend that uses `RealtimeSTT` and `keyboard` to do local speech to tex
 
  * [RealtimeSTT](https://github.com/KoljaB/RealtimeSTT) 
  * [Keyboard](https://github.com/boppreh/keyboard)
- * [PyYAML](https://pyyaml.org/)
+ * [ruamel.yaml](https://sourceforge.net/projects/ruamel-yaml/)
  * Python 3.12
 
 # Usage

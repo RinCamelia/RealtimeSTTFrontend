@@ -1,27 +1,53 @@
 import os
 import sys
 import keyboard
-import yaml
 import time
+import ruamel.yaml
+from ruamel.yaml import yaml_object
+from enum import Enum, auto
+
+
+yaml = ruamel.yaml.YAML(typ='rt', pure=True)
+yaml.explicit_start = True
+yaml.explicit_end = True
+yaml.line_break = True
 
 config_file_name = 'config.yml'
 lines_storage = []
 
+class DumpMethod(Enum):
+    yaml_tag = "DumpMethod"
+
+    KEYBOARD = auto()
+    TEXT_FILE = auto()
+
+    @classmethod
+    def to_yaml(cls, representer, node):
+        return representer.represent_str(node.name)
+    
+    @classmethod
+    def from_yaml(cls, constructor, node):
+        return cls[node]
+
+yaml.register_class(DumpMethod)
+
 def load_config(config_file_name):
-    config = {
-        'model': 'small.en',
-        'language': 'en',
-        'prompt': '',
-        'enable_spinner': False,
-        'speech_model_sensitivity': 0.05,
-        'dump_hotkey': ';',
-        'dump_time_between_lines': 0.1,
-        'version': 1
-    }
+    config = dict(
+        version=3,
+        model='small.en',
+        language='en',
+        prompt='',
+        enable_spinner=False,
+        speech_model_sensitivity=0.05,
+        dump_hotkey=';',
+        dump_time_between_lines= 0.1,
+        dump_method=DumpMethod.KEYBOARD,
+        dump_file_name='transcribed_text.txt'
+    )
 
     if (os.path.isfile(config_file_name)):
         with open(config_file_name) as config_file:
-            loaded_config = yaml.safe_load(config_file)
+            loaded_config = yaml.load(config_file)
             if loaded_config != None and 'version' in loaded_config and loaded_config['version'] == config['version']:
                 config = loaded_config
             else:
@@ -32,7 +58,7 @@ def load_config(config_file_name):
 
 def dump_config(config):
      with open(config_file_name, 'w') as config_file:
-         yaml.safe_dump(config, config_file)
+         yaml.dump(config, config_file)
 
 def process_text(text):
     print('Transcribed line: ' + text)
@@ -40,11 +66,15 @@ def process_text(text):
 
 def dump_lines(method):
     if len(lines_storage) > 0:
-        print('writing lines...')
-        
-        for line in lines_storage:
-            keyboard.write(line)
-            time.sleep(config['dump_time_between_lines'])
+        print('writing lines via chosen dump method')
+        match config['dump_method']:
+            case DumpMethod.KEYBOARD:
+                for line in lines_storage:
+                    keyboard.write(line)
+                    time.sleep(config['dump_time_between_lines'])
+            case DumpMethod.TEXT_FILE:
+                with open(config['dump_file_name'], 'a') as transcription_file:
+                    transcription_file.writelines(lines_storage)
         lines_storage.clear()
 
 config = load_config(config_file_name)
