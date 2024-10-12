@@ -15,16 +15,24 @@ def load_config(config_file_name):
         'enable_spinner': False,
         'speech_model_sensitivity': 0.05,
         'dump_hotkey': ';',
-        'dump_time_between_lines': 0.1
+        'dump_time_between_lines': 0.1,
+        'version': 1
     }
 
     if (os.path.isfile(config_file_name)):
         with open(config_file_name) as config_file:
-            config = yaml.safe_load(config_file)
+            loaded_config = yaml.safe_load(config_file)
+            if loaded_config != None and 'version' in loaded_config and loaded_config['version'] == config['version']:
+                config = loaded_config
+            else:
+                dump_config(config)
     else:
-        with open(config_file_name, 'w') as config_file:
-            yaml.safe_dump(config, config_file)
+        dump_config(config)
     return config
+
+def dump_config(config):
+     with open(config_file_name, 'w') as config_file:
+         yaml.safe_dump(config, config_file)
 
 def process_text(text):
     print('Transcribed line: ' + text)
